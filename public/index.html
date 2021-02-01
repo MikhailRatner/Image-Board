@@ -1,34 +1,37 @@
 <!doctype html>
 <html>
 <head>
-    <title>My Imageboard</title>
+    <title>Your Favourite Travel Pic</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    <h1>The best Imageboard</h1>
+    <h1>Your Favourite Travel Pic</h1>
 
-    <div id="main">
-        <h2>Hi {{name}} isn't Vue awesome?!?!</h2>
+    <!-- This container is for our Vue instance! -->
+    <!-- It will have access to our Vue code. -->
+    
+    <div id='mainBoard'>
+        <h2>Hi {{name}}!!! Isn't Vue awesome?!?!? </h2>
         <h2>10 * 2 = {{10 * 2}}</h2>
         <h2>Name capitalized: {{name.toUpperCase()}}</h2>
 
-        <h3 v-if='seen'>Yay you can see me!!!</h3>
-        <h3 v-else>'seen is falsey if you see this!!</h3>
+        <h3 v-if='seen'>Yay you can see me!!!!</h3>
+        <h3 v-else>'seen' is falsey if you see this!!!</h3>
 
+        <!-- LOOPING IN VUE! -->
+        <!-- 'each' is our iterator -->
+        <!-- 'cities' refers to the property inside data in script.js that we're looping through  -->
+        <!-- another way to write @click is v-on:click -->
         <ul>
+        <ul v-if='cities.length'>
+            <h2>These are the cities:</h2>
             <li v-for='each in cities' @click='myFunction'>{{each.name}}, {{each.country}}</li>
         </ul>
-
-
-
-
     </div>
-
-
-
 
     <script src="/js/vue.js"></script>
     <script src="/js/axios.min.js"></script>
+    <!-- ORDER MATTERS! make sure script.js goes last -->
     <script src="/js/script.js"></script>
 </body>
 </html>
