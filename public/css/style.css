@@ -3,7 +3,7 @@
     font-family: Georgia, "Times New Roman", Times, serif;
 }
 
-#mainBoard {
+.mainBoard {
     display: grid;
     height: 30vh;
     grid-gap: 1rem;
