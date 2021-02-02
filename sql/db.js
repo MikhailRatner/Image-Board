@@ -15,3 +15,9 @@ module.exports.imageToDatabase = (url, username, title, description) => {
     const params = [url, username, title, description];
     return db.query(q, params);
 };
+
+module.exports.getImageById = (id) => {
+    const q = `SELECT * FROM images WHERE id=$1`;
+    const params = [id];
+    return db.query(q, params);
+};

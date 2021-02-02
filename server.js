@@ -30,7 +30,11 @@ const uploader = multer({
 app.get("/home", (req, res) => {
     // console.log("/cities route has been hit!!!");
     // res.json - how we send a response to the client!
-    db.getAllImages().then((images) => res.json(images.rows));
+    db.getAllImages()
+        .then((images) => res.json(images.rows))
+        .catch((err) => {
+            console.log("home error: ", err);
+        });
 });
 
 app.post("/upload", uploader.single("file"), s3.upload, (req, res) => {
@@ -45,12 +49,30 @@ app.post("/upload", uploader.single("file"), s3.upload, (req, res) => {
             req.body.username,
             req.body.title,
             req.body.description
-        ).then(() => {
-            res.json(req.body);
-        });
+        )
+            .then(() => {
+                res.json(req.body);
+            })
+            .catch((err) => {
+                console.log("upload error: ", err);
+            });
     } else {
         /* res.json({ success: false }); */
     }
+});
+
+app.get("/popup/:id", (req, res) => {
+    let { id } = req.params;
+    console.log(id);
+    db.getImageById(id)
+        .then(({ rows }) => {
+            console.log(rows);
+            res.json(rows);
+        })
+        .catch((err) => {
+            console.log("popup error: ", err);
+        });
+    //then((image) => res.json(image.rows))
 });
 
 /* app.post("/upload", uploader.single("file"), s3.upload, (req, res) => {

@@ -20,14 +20,29 @@
             </form>
             
             <div class="mainBoard">
-                <img class="imgBox"  v-for='image in images' v-bind:src="image.url"></img>
+                <img class="imgBox"  v-for='image in images' v-bind:src="image.url" @click="selectedImage=image.id">
                     <!-- LOOPING IN VUE! -->
                     <!-- 'image' is our iterator -->
                     <!-- 'images' refers to the property inside data in script.js that we're looping through  -->
                     <!-- another way to write @click is v-on:click -->
             </div>
 
+            <popup-card v-if="selectedImage" v-bind:id="selectedImage" @close="closeModal">
+                
+            </popup-card>
+
         </div>
+
+        <script id="popup-card-template" type="text/x-template">
+            <div class="modal">
+                <!--MAKE A TEMPLATE HERE -->
+                <img :src="data.url">
+                <p>{{ data.title }}</p>
+                <p>{{ data.description }}</p>
+                <p>{{ data.username }}</p>
+                <p @click="closeModal">CLICK TO CLOSE</p>
+            </div>
+        </script>
   
     <script src="/js/vue.js"></script>
     <script src="/js/axios.min.js"></script>
