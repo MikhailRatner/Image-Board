@@ -75,9 +75,25 @@ app.get("/popup/:id", (req, res) => {
     //then((image) => res.json(image.rows))
 });
 
-/* app.post("/upload", uploader.single("file"), s3.upload, (req, res) => {
-    console.log("inside /upload!!!");
-}); */
+app.get("/comments/:imageId", (req, res) => {
+    console.log("inside /comments/:imageId!!!");
+    let { id } = req.params;
+    console.log(id);
+    db.getAllCommentsByImgId(id)
+        .then(({ rows }) => {
+            console.log(rows);
+            res.json(rows);
+        })
+        .catch((err) => {
+            console.log("comments/:imageId error: ", err);
+        });
+});
+
+app.post("/comment", (req, res) => {
+    console.log("inside /comment!!!");
+    console.log("REQ BODY", req.body);
+    db.addCommentToImg(id);
+});
 
 app.listen(8080, () => console.log("IB server is listening..."));
 

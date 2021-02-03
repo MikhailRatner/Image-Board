@@ -21,3 +21,15 @@ module.exports.getImageById = (id) => {
     const params = [id];
     return db.query(q, params);
 };
+
+module.exports.addCommentToImg = (id) => {
+    const q = `INSERT INTO comments (text, username, comment_id)`;
+    const params = [id];
+    return db.query(q, params);
+};
+
+module.exports.getAllCommentsByImgId = (id) => {
+    const q = `SELECT * FROM comments WHERE id=$1`;
+    const params = [id];
+    return db.query(q, params);
+};

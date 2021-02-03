@@ -9,6 +9,9 @@
     <h2>These are the images:</h2>
 
         <div id='main' v-if='images.length'>
+            <popup-card v-if="selectedImage" v-bind:id="selectedImage" @close="closeModal">
+
+            </popup-card>
             <!-- This container is for our Vue instance! It will have access to our Vue code. -->
             
             <form>
@@ -26,21 +29,30 @@
                     <!-- 'images' refers to the property inside data in script.js that we're looping through  -->
                     <!-- another way to write @click is v-on:click -->
             </div>
-
-            <popup-card v-if="selectedImage" v-bind:id="selectedImage" @close="closeModal">
-                
-            </popup-card>
-
         </div>
 
         <script id="popup-card-template" type="text/x-template">
             <div class="modal">
-                <!--MAKE A TEMPLATE HERE -->
-                <img :src="data.url">
-                <p>{{ data.title }}</p>
-                <p>{{ data.description }}</p>
-                <p>{{ data.username }}</p>
-                <p @click="closeModal">CLICK TO CLOSE</p>
+                <!--TEMPLATE FOR VUE MODAL COMPONENT -->
+                <div class="modalContent">
+                    <img :src="data.url" class="imgModal">
+                    <p>{{ data.title }}</p>
+                    <p>{{ data.description }}</p>
+                    <p>{{ data.username }}</p>
+                    <p @click="closePopup">CLICK TO CLOSE</p>
+                </div>
+                <comment-section v-bind:id="selectedImage" @add="addComment">
+                </comment-section>
+            </div>
+        </script>
+
+        <script id="comment-template" type="text/x-template">
+                <!--TEMPLATE FOR VUE COMMENT COMPONENT -->
+            <div class="commentBox">
+                <input v-model="comment" type="text" name="comment" placeholder="Type your comment">
+                <input v-model="username" type="text" name="username" placeholder="Your username">
+                <button @click="submitComment">SUBMIT COMMENT</button>
+                <p class="allComments" v-for='comment in comments' :src="comment.text"></p>
             </div>
         </script>
   

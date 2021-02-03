@@ -2,26 +2,58 @@
 // this file is where all of our Vue code will exist!!
 
 (function () {
+    Vue.component("comment-section", {
+        template: `#comment-template`,
+        props: ["id"],
+
+        data: function () {
+            return {
+                //HERE IS THE DATA WHICH WE GIVE TO COMPONENT
+                comments: [],
+                username: "",
+                comment: "",
+            };
+        },
+
+        mounted: function () {
+            console.log("vue comment component has mounted!");
+            console.log("this outside get comments axios: ", this);
+            var self = this;
+            axios.get(`/comments/${this.id}`).then((res) => {
+                //MAKES A SERVER HTTP REQUEST TO retrieve the all comments made about that particular image.
+                console.log("this inside get comments axios: ", self);
+                self.data.comments = res.data[0];
+                console.log("self.data:", self.data.comments);
+            });
+        },
+        methods: {
+            //CLICK HANDLER FOR SUBMIT COMMENTS BUTTON
+
+            submitComment: function () {
+                this.$emit("add");
+            },
+        },
+    });
+
     Vue.component("popup-card", {
+        template: `#popup-card-template`,
+        props: ["id"],
+
         data: function () {
             return {
                 //HERE IS THE DATA WHICH WE GIVE TO COMPONENT
                 data: [],
             };
         },
-        template: `#popup-card-template`,
-        props: ["id"],
-        /*         methods {
-            this.$emit('close')
-        } */
+
         mounted: function () {
             var self = this;
             axios
                 .get(`/popup/${this.id}`)
                 .then((res) => {
-                    console.log("this inside axios: ", this);
+                    //console.log("self inside axios: ", self);
                     self.data = res.data[0];
-                    console.log("self.images:", data.image);
+                    //console.log("self.data:", self.data);
                 })
                 .catch(function (err) {
                     console.log("err in /home: ", err);
@@ -29,9 +61,8 @@
         },
 
         methods: {
-            closeModal: function () {
-                console.log("closing modal: ", this);
-                this.$emit("close", this.count);
+            closePopup: function () {
+                this.$emit("close");
             },
         },
     });
@@ -51,18 +82,15 @@
 
         // mounted is a lifecycle method that runs when the Vue instance renders
         mounted: function () {
-            console.log("my vue instance has mounted");
-            console.log("this outside axios: ", this);
-
             axios
                 .get("/home")
                 .then((res) => {
-                    console.log("this inside axios: ", this);
+                    //console.log("this inside axios: ", this);
                     // axios will ALWAYS store the info coming from the server inside a 'data' property
                     // console.log("response from /cities: ", response.data);
 
                     this.images = res.data;
-                    console.log("RES:", res);
+                    //console.log("RES:", res);
                 })
                 .catch(function (err) {
                     console.log("err in /home: ", err);
@@ -90,7 +118,17 @@
             fileSelectHandler: function (e) {
                 this.file = e.target.files[0];
             },
-            /*             clickHandlerImages: function (idParam) {
+            closeModal: function () {
+                console.log("CLOSING IN VUE");
+                this.selectedImage = null;
+            },
+            addCommment: function () {
+                console.log("ADD COMMI RUNS");
+
+                //MAKES A SERVER HTTP REQUEST TO add comment
+                axios.post(`/comment`);
+            },
+            /*clickHandlerImages: function (idParam) {
                 //THIS FUNCTION CAN BE EEXCHANGED BY WRITING THIS WITHIN THE IMAGE CLICK HANDLER IN HTML:
                 // @click="selectedImage=image.id
                 // THIS DIRECTLY CHANGES THE selcetedImage property of data to the id of the looped item (each.id)
