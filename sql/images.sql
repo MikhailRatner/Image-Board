@@ -14,7 +14,7 @@ CREATE TABLE comments(
     id SERIAL PRIMARY KEY,
     text VARCHAR NOT NULL,
     username VARCHAR NOT NULL,
-    comment_id INT REFERENCES images(id) NOT NULL UNIQUE,
+    comment_id INT REFERENCES images(id) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

@@ -75,6 +75,17 @@ app.get("/popup/:id", (req, res) => {
     //then((image) => res.json(image.rows))
 });
 
+app.get("/morepics/:smallestId", (req, res) => {
+    //const { smallestId } = req.params.smallestId;
+    console.log("SMALLEST ID:", req.params.smallestId);
+    db.getMoreImages(req.params.smallestId)
+        .then((res) => {
+            console.log("RESULT GET MORE IMAGES:", res);
+            res.json(results.rows);
+        })
+        .catch((err) => console.log("ERROR IN GET MORE IMAGES:", err));
+});
+
 app.get("/comments/:imageId", (req, res) => {
     console.log("inside /comments/:imageId!!!");
     let { id } = req.params;
@@ -90,9 +101,17 @@ app.get("/comments/:imageId", (req, res) => {
 });
 
 app.post("/comment", (req, res) => {
+    const { idC, comment, username } = req.body;
     console.log("inside /comment!!!");
     console.log("REQ BODY", req.body);
-    db.addCommentToImg(id);
+    db.addCommentToImg(comment, username, idC)
+        .then(({ rows }) => {
+            console.log(rows);
+            res.json(rows);
+        })
+        .catch((err) => {
+            console.log("post comment error: ", err);
+        });
 });
 
 app.listen(8080, () => console.log("IB server is listening..."));

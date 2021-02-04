@@ -1,37 +1,62 @@
 * {
     background-color: aquamarine;
     font-family: Georgia, "Times New Roman", Times, serif;
+    color: black;
+    box-sizing: border-box;
 }
 
-.mainBoard {
+form {
     display: grid;
-    height: 30vh;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
     grid-gap: 1rem;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    /* justify-content: center; */
 }
 
-.imgBox {
+button {
+    display: block;
+    background-color: tomato;
+    padding: 10px 20px;
+    color: whitesmoke;
+    text-decoration: none;
+    text-align: center;
+    /*     transition: 0.3s ease-out;
+    &:hover {
+        background-color: darken(tomato, 10%);
+    } */
+}
+
+.card-container {
     display: grid;
-    place-items: center;
-    background: rgb(19, 19, 118);
-    width: 400px;
-    height: 500px;
-    border: 3px, dashed, black;
+    /* grid-template-columns: 1fr 1fr 1fr; */
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-gap: 1rem;
+    padding: 1rem;
 }
 
-.modal {
+.card {
+    box-shadow: 0px 1px 5px #555;
+    display: flex;
+    flex-direction: column;
+    /* padding: 1rem; */
+    justify-content: space-between;
+}
+
+.card img {
     width: 100%;
     height: 80%;
-    background-color: black;
-    z-index: 1;
+    object-fit: cover;
+}
+
+.card p {
+    background-color: violet;
 }
 
 .modalContent {
-    width: 70%;
-    height: 80%;
+    width: 100%;
+    z-index: 1;
 }
 
-body {
-    font-family: Georgia, "Times New Roman", Times, serif;
-    color: black;
+.imgModal {
+    width: 100%;
+    z-index: 1;
 }

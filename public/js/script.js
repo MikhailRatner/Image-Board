@@ -4,7 +4,7 @@
 (function () {
     Vue.component("comment-section", {
         template: `#comment-template`,
-        props: ["id"],
+        props: ["idC"],
 
         data: function () {
             return {
@@ -16,21 +16,35 @@
         },
 
         mounted: function () {
-            console.log("vue comment component has mounted!");
-            console.log("this outside get comments axios: ", this);
+            //console.log("vue comment component has mounted!");
+            //console.log("this outside get comments axios: ", this);
+            console.log("IDC MOUNTED:", this.idC);
             var self = this;
-            axios.get(`/comments/${this.id}`).then((res) => {
+            axios.get(`/comments/${this.idC}`).then((res) => {
                 //MAKES A SERVER HTTP REQUEST TO retrieve the all comments made about that particular image.
                 console.log("this inside get comments axios: ", self);
-                self.data.comments = res.data[0];
-                console.log("self.data:", self.data.comments);
+                self.comments = res.data[0];
+                console.log("self.comments:", self.comments);
             });
         },
         methods: {
             //CLICK HANDLER FOR SUBMIT COMMENTS BUTTON
-
-            submitComment: function () {
-                this.$emit("add");
+            submitcomment: function () {
+                console.log("ADD COMMI RUNS");
+                var self = this;
+                console.log("idC", this.idC);
+                var obj = {
+                    comment: this.comment,
+                    username: this.username,
+                    created_at: this.created_at,
+                    idC: this.idC,
+                };
+                //MAKES A SERVER HTTP REQUEST TO add comment
+                axios.post(`/comment`, obj).then((res) => {
+                    self.comments.push(res.data).catch(function (err) {
+                        console.log("err in /comment post: ", err);
+                    });
+                });
             },
         },
     });
@@ -78,6 +92,8 @@
             username: "",
             file: null,
             selectedImage: null,
+            smallestId: 0,
+            moreImg: true,
         },
 
         // mounted is a lifecycle method that runs when the Vue instance renders
@@ -88,9 +104,10 @@
                     //console.log("this inside axios: ", this);
                     // axios will ALWAYS store the info coming from the server inside a 'data' property
                     // console.log("response from /cities: ", response.data);
-
+                    /*WE CAN USE this. BECAUSE IT IS AN ARROW FUNCTION. OTHERWISE WE WOULD HAVE TO DECLASE SELF = THIS BEFORE AXIOS AND THEN USE SELF. INSTEAD OF THIS.*/
                     this.images = res.data;
                     //console.log("RES:", res);
+                    this.smallestId = this.images[this.images.length - 1].id;
                 })
                 .catch(function (err) {
                     console.log("err in /home: ", err);
@@ -122,11 +139,18 @@
                 console.log("CLOSING IN VUE");
                 this.selectedImage = null;
             },
-            addCommment: function () {
-                console.log("ADD COMMI RUNS");
-
-                //MAKES A SERVER HTTP REQUEST TO add comment
-                axios.post(`/comment`);
+            getMorePics: function () {
+                //console.log("GET MORE PICS CLICKED:");
+                /* var last = this.images.slice(-1)[0]; WORKS BUT OTHER ONE PERFORMANCE IS BETTER*/
+                this.smallestId = this.images[this.images.length - 1].id;
+                console.log("FIRST ITEM IN IMAGES:", this.smallestId);
+                var self = this;
+                axios
+                    .get(`/morepics/${self.smallestId}`)
+                    .then((res) => {
+                        console.log(res.data);
+                    })
+                    .catch((err) => console.log("err in /morepics: ", err));
             },
             /*clickHandlerImages: function (idParam) {
                 //THIS FUNCTION CAN BE EEXCHANGED BY WRITING THIS WITHIN THE IMAGE CLICK HANDLER IN HTML:
