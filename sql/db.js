@@ -18,6 +18,8 @@ module.exports.getMoreImages = (smallestId) => {
                 WHERE id < $1
                 ORDER BY id DESC
                 LIMIT 3;`;
+    const params = [smallestId];
+    return db.query(q, params);
 };
 
 module.exports.imageToDatabase = (url, username, title, description) => {
@@ -40,8 +42,8 @@ module.exports.addCommentToImg = (text, username, comment_id) => {
     return db.query(q, params);
 };
 
-module.exports.getAllCommentsByImgId = (id) => {
-    const q = `SELECT * FROM comments WHERE id=$1`;
-    const params = [id];
+module.exports.getAllCommentsByImgId = (imageId) => {
+    const q = `SELECT * FROM comments WHERE comment_id=$1`;
+    const params = [imageId];
     return db.query(q, params);
 };

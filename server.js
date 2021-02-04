@@ -8,6 +8,8 @@ const path = require("path");
 const s3 = require("./s3");
 const { s3Url } = require("./config.json");
 
+app.use(express.json());
+
 const diskStorage = multer.diskStorage({
     destination: function (req, file, callback) {
         callback(null, __dirname + "/uploads");
@@ -27,7 +29,7 @@ const uploader = multer({
     },
 });
 
-app.get("/home", (req, res) => {
+app.get("/firstload", (req, res) => {
     // console.log("/cities route has been hit!!!");
     // res.json - how we send a response to the client!
     db.getAllImages()
@@ -79,20 +81,21 @@ app.get("/morepics/:smallestId", (req, res) => {
     //const { smallestId } = req.params.smallestId;
     console.log("SMALLEST ID:", req.params.smallestId);
     db.getMoreImages(req.params.smallestId)
-        .then((res) => {
-            console.log("RESULT GET MORE IMAGES:", res);
-            res.json(results.rows);
+        .then(({ rows }) => {
+            console.log("RESULT GET MORE IMAGES:", rows);
+            res.json(rows);
         })
         .catch((err) => console.log("ERROR IN GET MORE IMAGES:", err));
 });
 
 app.get("/comments/:imageId", (req, res) => {
     console.log("inside /comments/:imageId!!!");
-    let { id } = req.params;
-    console.log(id);
-    db.getAllCommentsByImgId(id)
+    console.log("REQ PARAMS:", req.params);
+    let { imageId } = req.params;
+    console.log("IMAGE ID: ", imageId);
+    db.getAllCommentsByImgId(imageId)
         .then(({ rows }) => {
-            console.log(rows);
+            console.log("ROWS OF COMMENTS:", rows);
             res.json(rows);
         })
         .catch((err) => {
@@ -115,19 +118,3 @@ app.post("/comment", (req, res) => {
 });
 
 app.listen(8080, () => console.log("IB server is listening..."));
-
-/* // this info would be coming from the database!!
-let cities = [
-    {
-        name: "Berlin",
-        country: "DE",
-    },
-    {
-        name: "Guayaquil",
-        country: "Ecuador",
-    },
-    {
-        name: "Venice",
-        country: "Italy",
-    },
-]; */

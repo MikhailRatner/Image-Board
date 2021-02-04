@@ -23,15 +23,29 @@
             axios.get(`/comments/${this.idC}`).then((res) => {
                 //MAKES A SERVER HTTP REQUEST TO retrieve the all comments made about that particular image.
                 console.log("this inside get comments axios: ", self);
-                self.comments = res.data[0];
+                self.comments = res.data;
                 console.log("self.comments:", self.comments);
             });
         },
+
+        watch: {
+            id: function () {
+                var self = this;
+                axios
+                    .get(`/popup/${this.id}`)
+                    .then((res) => {
+                        self.data = res.data[0];
+                    })
+                    .catch(function (err) {
+                        console.log("err in /home: ", err);
+                    });
+            },
+        },
+
         methods: {
             //CLICK HANDLER FOR SUBMIT COMMENTS BUTTON
             submitcomment: function () {
                 console.log("ADD COMMI RUNS");
-                var self = this;
                 console.log("idC", this.idC);
                 var obj = {
                     comment: this.comment,
@@ -41,7 +55,7 @@
                 };
                 //MAKES A SERVER HTTP REQUEST TO add comment
                 axios.post(`/comment`, obj).then((res) => {
-                    self.comments.push(res.data).catch(function (err) {
+                    this.comments.push(res.data).catch(function (err) {
                         console.log("err in /comment post: ", err);
                     });
                 });
@@ -74,6 +88,26 @@
                 });
         },
 
+        watch: {
+            id: function () {
+                var self = this;
+                axios
+                    .get(`/popup/${this.id}`)
+                    .then((res) => {
+                        if (res.data.length == 0) {
+                            self.$emit("close");
+                        } else {
+                            self.data = res.data[0];
+                        }
+                        //console.log("self inside axios: ", self);
+                        //console.log("self.data:", self.data);
+                    })
+                    .catch(function (err) {
+                        console.log("err in /home: ", err);
+                    });
+            },
+        },
+
         methods: {
             closePopup: function () {
                 this.$emit("close");
@@ -91,15 +125,18 @@
             description: "",
             username: "",
             file: null,
-            selectedImage: null,
+            selectedImage: location.hash.slice(1),
             smallestId: 0,
-            moreImg: true,
+            moreImgButton: true,
         },
 
         // mounted is a lifecycle method that runs when the Vue instance renders
         mounted: function () {
+            addEventListener("hashchange", () => {
+                this.selectedImage = location.hash.slice(1);
+            });
             axios
-                .get("/home")
+                .get("/firstload")
                 .then((res) => {
                     //console.log("this inside axios: ", this);
                     // axios will ALWAYS store the info coming from the server inside a 'data' property
@@ -144,11 +181,18 @@
                 /* var last = this.images.slice(-1)[0]; WORKS BUT OTHER ONE PERFORMANCE IS BETTER*/
                 this.smallestId = this.images[this.images.length - 1].id;
                 console.log("FIRST ITEM IN IMAGES:", this.smallestId);
-                var self = this;
                 axios
-                    .get(`/morepics/${self.smallestId}`)
+                    .get(`/morepics/${this.smallestId}`)
                     .then((res) => {
-                        console.log(res.data);
+                        let moreImg = res.data;
+                        for (let i = 0; i < moreImg.length; i++) {
+                            if (moreImg[i].id === moreImg[i].smallestId) {
+                                this.moreImgButton = false;
+                            }
+                        }
+                        console.log("MORE IMAGES:", moreImg);
+                        this.images.push(...moreImg);
+                        console.log("THIS IMAGES:", this.images);
                     })
                     .catch((err) => console.log("err in /morepics: ", err));
             },
