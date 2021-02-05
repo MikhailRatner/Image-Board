@@ -71,6 +71,7 @@
             return {
                 //HERE IS THE DATA WHICH WE GIVE TO COMPONENT
                 data: [],
+                likes: 0,
             };
         },
 
@@ -111,6 +112,17 @@
         methods: {
             closePopup: function () {
                 this.$emit("close");
+            },
+            addLike: function () {
+                this.likes++;
+                let obj = this.likes;
+                console.log("One more like, yay");
+
+                /* axios.post(`/like/${this.id}`).then((res) => {
+                    console.log(res.data).catch(function (err) {
+                        console.log("err in /comment post: ", err);
+                    });
+                }) */
             },
         },
     });
@@ -174,6 +186,9 @@
             },
             closeModal: function () {
                 console.log("CLOSING IN VUE");
+                console.log("CLOSING HASH BEFORE:", location.hash);
+                location.hash = "";
+                console.log("CLOSING HASH AFTER:", location.hash);
                 this.selectedImage = null;
             },
             getMorePics: function () {

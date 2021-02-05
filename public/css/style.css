@@ -25,16 +25,18 @@ button {
 }
 
 #moreButtonDiv {
-    display: inline-block;
+    display: flex;
+    justify-content: center;
     width: 100%;
 }
 
 .card-container {
     display: grid;
-    /* grid-template-columns: 1fr 1fr 1fr; */
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-row: 3 / 4;
+    grid-template-columns: repeat(3, 1fr);
     grid-gap: 1rem;
     padding: 1rem;
+    grid-auto-flow: row;
 }
 
 .card {
@@ -45,14 +47,15 @@ button {
     justify-content: space-between;
 }
 
-.card img {
+.card-img {
     width: 100%;
-    height: 80%;
+    height: 325px;
     object-fit: cover;
 }
 
-.card p {
-    background-color: violet;
+.card-title-div {
+    display: flex;
+    justify-content: center;
 }
 
 .modal {

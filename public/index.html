@@ -25,9 +25,11 @@
                 <section class="card-container">
                     <div class="card" v-for='image in images'>
                         <a :href="'#' + image.id">
-                            <img v-bind:src="image.url">
+                            <img class="card-img" v-bind:src="image.url">
                         </a>
-                        <p v-bind:src="image.title"></p>
+                        <div class="card-title-div">
+                            <p>{{image.title}}</p>
+                        </div>
                         <!-- LOOPING IN VUE! -->
                         <!-- 'image' is our iterator -->
                         <!-- 'images' refers to the property inside data in script.js that we're looping through  -->
@@ -46,6 +48,9 @@
                 <!--TEMPLATE FOR VUE MODAL COMPONENT -->
                 <div class="modalContent">
                     <img :src="data.url" class="imgModal">
+                    <button @click="addLike">Please like me 👍</button>
+                    <p v-if="likes > 0">This image has {{ likes }} 👍</p>
+                    <p v-else>This image has no likes 😿</p>
                     <p>{{ data.title }}</p>
                     <p>{{ data.description }}</p>
                     <p>{{ data.username }}</p>
@@ -55,6 +60,7 @@
                 </comment-section>
             </div>
         </script>
+
 
         <script id="comment-template" type="text/x-template">
                 <!--TEMPLATE FOR VUE COMMENT COMPONENT -->
