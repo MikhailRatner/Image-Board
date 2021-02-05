@@ -11,9 +11,14 @@ form {
     /* justify-content: center; */
 }
 
+h2 {
+    font-weight: 400;
+}
+
 button {
     display: block;
     background-color: tomato;
+    border-radius: 15px;
     padding: 10px 20px;
     color: whitesmoke;
     text-decoration: none;
